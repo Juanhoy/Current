@@ -224,54 +224,50 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-.instagram-feed-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    max-width: 450px;
-    margin-top: 1rem;
-}
-
-.instagram-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    background: rgba(255,255,255,0.03);
-    padding: 8px;
-    border-radius: 12px;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-
-.instagram-grid img, .grid-placeholder {
-    width: 100%;
-    aspect-ratio: 1/1;
-    object-fit: cover;
-    display: block;
-    background: rgba(255,255,255,0.08); /* Better fallback color */
-    border-radius: 4px;
-}
-
-.grid-placeholder {
+.photography-carousel {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.75rem;
-    color: rgba(255,255,255,0.2);
-    text-transform: lowercase;
-    border: 1px dashed rgba(255,255,255,0.1);
+    gap: 1.5rem;
+    overflow-x: auto;
+    height: 400px;
+    padding-bottom: 1.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.2) transparent;
 }
 
-.instagram-feed-link:hover .instagram-grid {
-    transform: translateY(-8px) scale(1.02);
-    background: rgba(255,255,255,0.08);
+.photography-carousel::-webkit-scrollbar {
+    height: 4px;
 }
 
-.instagram-tag {
-    display: block;
-    margin-top: 0.8rem;
+.photography-carousel::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+}
+
+.photography-carousel img {
+    height: 100%;
+    width: auto;
+    border-radius: 4px;
+    object-fit: cover;
+    flex-shrink: 0;
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.photography-carousel img:hover {
+    transform: scale(1.02);
+}
+
+.instagram-link {
+    display: inline-block;
+    margin-top: 1.5rem;
     font-size: 0.85rem;
     opacity: 0.5;
-    font-style: italic;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: opacity 0.2s ease;
+}
+
+.instagram-link:hover {
+    opacity: 1;
 }
 
 /* Responsive */
@@ -280,17 +276,62 @@ body {
         padding: 1.5rem;
     }
 
-    .artist-media {
-        flex-direction: column;
-        margin-left: 1rem;
+    .site-header {
+        top: 1.5rem;
+        left: 1.5rem;
     }
 
-    .artist-img {
-        width: 100%;
-        max-width: 300px;
+    .category-title {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .landing-nav {
+        flex-direction: column;
+        gap: 2rem;
+        text-align: center;
+    }
+
+    .nav-link {
+        font-size: 1.4rem;
+    }
+
+    .view-content {
+        padding-top: 6rem;
     }
 
     .release-list, .event-list {
         margin-left: 1rem;
+    }
+
+    .song-header {
+        font-size: 1rem;
+    }
+
+    .song-details {
+        margin-left: 1rem;
+    }
+
+    .custom-player {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .photography-carousel {
+        height: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .category-title {
+        font-size: 1.75rem;
+    }
+
+    .nav-link {
+        font-size: 1.2rem;
+    }
+
+    .artist-name {
+        font-size: 1.15rem;
     }
 }
