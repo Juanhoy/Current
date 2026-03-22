@@ -29,12 +29,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle deep linking via Hash
     let pendingAudio = null;
+    const autoplayPrompt = document.getElementById('autoplay-prompt');
+    const promptArtist = document.getElementById('prompt-artist');
 
     const handleHash = () => {
         const hash = window.location.hash.substring(1);
         if (!hash) {
             homeView.classList.remove('hidden');
             contentView.classList.add('hidden');
+            autoplayPrompt.classList.add('hidden');
             return;
         }
 
@@ -60,19 +63,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (songHeader && songHeader.classList.contains('song-header')) {
             const artistItem = songHeader.closest('.artist-item');
             const catId = artistItem.closest('.category').id;
+            const artistName = artistItem.querySelector('.artist-name').textContent;
             
             showCategory(catId, false);
             artistItem.querySelector('.artist-details').classList.add('expanded');
             const songDetails = songHeader.nextElementSibling;
             songDetails.classList.add('expanded');
             
-            // Auto-play DJ sets/Audio if linked directly
+            // Auto-play logic
             const audio = songDetails.querySelector('audio');
             if (audio) {
-                // Try playing immediately
                 audio.play().catch(err => {
-                    console.log('Autoplay blocked. Waiting for user interaction.');
-                    pendingAudio = audio; // Save for first interaction
+                    console.log('Autoplay blocked. Showing prompt.');
+                    pendingAudio = audio;
+                    promptArtist.textContent = `listening to ${artistName}`;
+                    autoplayPrompt.classList.remove('hidden');
                 });
             }
             
@@ -82,18 +87,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Resilient Autoplay for Mobile: Listen for first touch
-    const triggerPendingAudio = () => {
+    // Resilient Autoplay prompt handler
+    const triggerAudioInteraction = () => {
         if (pendingAudio) {
-            pendingAudio.play().catch(err => console.log('Autoplay still failing:', err));
+            pendingAudio.play().catch(err => console.log('Final play error:', err));
             pendingAudio = null;
+            autoplayPrompt.classList.add('hidden');
         }
-        document.removeEventListener('click', triggerPendingAudio);
-        document.removeEventListener('touchstart', triggerPendingAudio);
     };
 
-    document.addEventListener('click', triggerPendingAudio);
-    document.addEventListener('touchstart', triggerPendingAudio);
+    autoplayPrompt.addEventListener('click', triggerAudioInteraction);
+    document.addEventListener('touchstart', (e) => {
+        if (!autoplayPrompt.classList.contains('hidden')) {
+            triggerAudioInteraction();
+        }
+    }, { passive: true });
 
     window.addEventListener('hashchange', handleHash);
     handleHash(); // Run on load
