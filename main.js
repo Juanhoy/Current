@@ -28,6 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Handle deep linking via Hash
+    let pendingAudio = null;
+
     const handleHash = () => {
         const hash = window.location.hash.substring(1);
         if (!hash) {
@@ -64,10 +66,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const songDetails = songHeader.nextElementSibling;
             songDetails.classList.add('expanded');
             
-            // Auto-play DJ sets if linked directly
+            // Auto-play DJ sets/Audio if linked directly
             const audio = songDetails.querySelector('audio');
             if (audio) {
-                audio.play().catch(err => console.log('Autoplay blocked by browser. User interaction required.'));
+                // Try playing immediately
+                audio.play().catch(err => {
+                    console.log('Autoplay blocked. Waiting for user interaction.');
+                    pendingAudio = audio; // Save for first interaction
+                });
             }
             
             setTimeout(() => {
@@ -75,6 +81,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 500);
         }
     };
+
+    // Resilient Autoplay for Mobile: Listen for first touch
+    const triggerPendingAudio = () => {
+        if (pendingAudio) {
+            pendingAudio.play().catch(err => console.log('Autoplay still failing:', err));
+            pendingAudio = null;
+        }
+        document.removeEventListener('click', triggerPendingAudio);
+        document.removeEventListener('touchstart', triggerPendingAudio);
+    };
+
+    document.addEventListener('click', triggerPendingAudio);
+    document.addEventListener('touchstart', triggerPendingAudio);
 
     window.addEventListener('hashchange', handleHash);
     handleHash(); // Run on load
