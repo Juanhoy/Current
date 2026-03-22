@@ -1,0 +1,246 @@
+:root {
+    --bg-color: #4FA5E8;
+    --text-color: #FFFFFF;
+    --accent-color: #FFFFFF;
+    --font-serif: 'EB Garamond', serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-serif);
+    line-height: 1.5;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+#app {
+    padding: 2rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.site-header {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    z-index: 100;
+}
+
+.category-title {
+    font-size: 2.5rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    letter-spacing: -0.01em;
+}
+
+.logo {
+    font-size: 1.15rem;
+    font-weight: 400;
+    text-transform: lowercase;
+    cursor: pointer;
+    opacity: 0.9;
+}
+
+.view-home {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.landing-nav {
+    display: flex;
+    gap: 8rem;
+}
+
+.nav-link {
+    font-size: 1.6rem;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+    font-weight: 400;
+}
+
+.nav-link:hover {
+    opacity: 0.7;
+}
+
+.view-content {
+    padding-top: 8rem;
+    transition: opacity 0.5s ease;
+}
+
+.view-content.hidden, .view-home.hidden {
+    display: none !important;
+    opacity: 0;
+}
+
+.artist-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.artist-item {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.artist-name {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    display: block;
+    font-weight: 400;
+    transition: opacity 0.2s ease;
+}
+
+.artist-item:hover .artist-name {
+    opacity: 0.7;
+}
+
+/* Expanding Details */
+.artist-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.3s ease, margin-top 0.3s ease;
+    opacity: 0;
+    margin-top: 0;
+}
+
+.artist-details.expanded {
+    max-height: 1000px;
+    opacity: 1;
+    margin-top: 1rem;
+}
+
+/* Specific Content Layouts */
+.release-list, .event-list {
+    list-style: none;
+    margin-left: 2rem;
+    margin-bottom: 2rem;
+}
+
+.release-list li, .event-list li {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.year {
+    opacity: 0.6;
+    min-width: 40px;
+}
+
+.artist-media {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-left: 2rem;
+}
+
+.song-item {
+    margin-bottom: 1.5rem;
+}
+
+.song-header {
+    cursor: pointer;
+    display: flex;
+    gap: 1.5rem;
+    font-size: 1.1rem;
+    transition: opacity 0.2s ease;
+}
+
+.song-header:hover {
+    opacity: 0.7;
+}
+
+.song-title {
+    font-weight: 500;
+}
+
+.song-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 0;
+    margin-left: 3.5rem; /* Align with title */
+}
+
+.song-details.expanded {
+    max-height: 500px;
+    opacity: 1;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.song-details iframe {
+    border-radius: 12px;
+    background: rgba(255,255,255,0.05);
+}
+
+.full-song-link {
+    color: var(--text-color);
+    font-size: 0.9rem;
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+
+.full-song-link:hover {
+    opacity: 1;
+}
+
+.custom-player {
+    width: 300px;
+    height: 32px;
+    filter: invert(1) hue-rotate(180deg) brightness(1.5); /* Make standard player look white/minimal */
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.custom-player:hover {
+    opacity: 1;
+}
+
+.set-info {
+    font-size: 0.85rem;
+    opacity: 0.5;
+    margin-top: 0.5rem;
+    font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #app {
+        padding: 1.5rem;
+    }
+
+    .artist-media {
+        flex-direction: column;
+        margin-left: 1rem;
+    }
+
+    .artist-img {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .release-list, .event-list {
+        margin-left: 1rem;
+    }
+}
