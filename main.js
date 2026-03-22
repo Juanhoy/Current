@@ -61,7 +61,14 @@ document.addEventListener('DOMContentLoaded', () => {
             
             showCategory(catId, false);
             artistItem.querySelector('.artist-details').classList.add('expanded');
-            songHeader.nextElementSibling.classList.add('expanded');
+            const songDetails = songHeader.nextElementSibling;
+            songDetails.classList.add('expanded');
+            
+            // Auto-play DJ sets if linked directly
+            const audio = songDetails.querySelector('audio');
+            if (audio) {
+                audio.play().catch(err => console.log('Autoplay blocked by browser. User interaction required.'));
+            }
             
             setTimeout(() => {
                 songHeader.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -71,6 +78,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('hashchange', handleHash);
     handleHash(); // Run on load
+
+    // Handle Auto-Pause: Only one audio at a time
+    const allAudio = document.querySelectorAll('audio');
+    allAudio.forEach(audio => {
+        audio.addEventListener('play', () => {
+            allAudio.forEach(other => {
+                if (other !== audio) {
+                    other.pause();
+                    other.currentTime = 0; // Optional: Reset or just pause
+                }
+            });
+        });
+    });
 
     // Reset to home when clicking logo
     logo.addEventListener('click', () => {
