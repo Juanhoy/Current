@@ -224,50 +224,54 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-.photography-carousel {
-    display: flex;
-    gap: 1.5rem;
-    overflow-x: auto;
-    height: 400px;
-    padding-bottom: 1.5rem;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,0.2) transparent;
+.instagram-feed-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    max-width: 450px;
+    margin-top: 1rem;
 }
 
-.photography-carousel::-webkit-scrollbar {
-    height: 4px;
+.instagram-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    background: rgba(255,255,255,0.03);
+    padding: 8px;
+    border-radius: 12px;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-.photography-carousel::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.2);
-    border-radius: 10px;
-}
-
-.photography-carousel img {
-    height: 100%;
-    width: auto;
-    border-radius: 4px;
+.instagram-grid img, .grid-placeholder {
+    width: 100%;
+    aspect-ratio: 1/1;
     object-fit: cover;
-    flex-shrink: 0;
-    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    display: block;
+    background: rgba(255,255,255,0.08); /* Better fallback color */
+    border-radius: 4px;
 }
 
-.photography-carousel img:hover {
-    transform: scale(1.02);
+.grid-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.2);
+    text-transform: lowercase;
+    border: 1px dashed rgba(255,255,255,0.1);
 }
 
-.instagram-link {
-    display: inline-block;
-    margin-top: 1.5rem;
+.instagram-feed-link:hover .instagram-grid {
+    transform: translateY(-8px) scale(1.02);
+    background: rgba(255,255,255,0.08);
+}
+
+.instagram-tag {
+    display: block;
+    margin-top: 0.8rem;
     font-size: 0.85rem;
     opacity: 0.5;
-    text-decoration: none;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    transition: opacity 0.2s ease;
-}
-
-.instagram-link:hover {
-    opacity: 1;
+    font-style: italic;
 }
 
 /* Responsive */
