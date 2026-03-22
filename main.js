@@ -7,23 +7,74 @@ document.addEventListener('DOMContentLoaded', () => {
     const logo = document.querySelector('.logo');
 
     // Handle view switching
+    const showCategory = (targetId, updateHash = true) => {
+        homeView.classList.add('hidden');
+        contentView.classList.remove('hidden');
+        
+        categories.forEach(cat => cat.style.display = 'none');
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+            targetSection.style.display = 'block';
+            if (updateHash) window.location.hash = targetId;
+        }
+    };
+
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const targetId = link.getAttribute('href').substring(1);
-            
-            homeView.classList.add('hidden');
-            contentView.classList.remove('hidden');
-            
-            categories.forEach(cat => cat.style.display = 'none');
-            document.getElementById(targetId).style.display = 'block';
+            showCategory(targetId);
         });
     });
 
+    // Handle deep linking via Hash
+    const handleHash = () => {
+        const hash = window.location.hash.substring(1);
+        if (!hash) {
+            homeView.classList.remove('hidden');
+            contentView.classList.add('hidden');
+            return;
+        }
+
+        // 1. Check if hash is a category
+        const category = document.getElementById(hash);
+        if (category && category.classList.contains('category')) {
+            showCategory(hash, false);
+            return;
+        }
+
+        // 2. Check if hash is an artist
+        const artist = document.getElementById(hash);
+        if (artist && artist.classList.contains('artist-item')) {
+            const catId = artist.closest('.category').id;
+            showCategory(catId, false);
+            artist.querySelector('.artist-details').classList.add('expanded');
+            artist.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
+        }
+
+        // 3. Check if hash is a song/set
+        const songHeader = document.getElementById(hash);
+        if (songHeader && songHeader.classList.contains('song-header')) {
+            const artistItem = songHeader.closest('.artist-item');
+            const catId = artistItem.closest('.category').id;
+            
+            showCategory(catId, false);
+            artistItem.querySelector('.artist-details').classList.add('expanded');
+            songHeader.nextElementSibling.classList.add('expanded');
+            
+            setTimeout(() => {
+                songHeader.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 500);
+        }
+    };
+
+    window.addEventListener('hashchange', handleHash);
+    handleHash(); // Run on load
+
     // Reset to home when clicking logo
     logo.addEventListener('click', () => {
-        homeView.classList.remove('hidden');
-        contentView.classList.add('hidden');
+        window.location.hash = '';
     });
 
     // Handle artist expansion
@@ -38,8 +89,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (details !== detailsElement) details.classList.remove('expanded');
             });
             detailsElement.classList.toggle('expanded');
+            
             if (!isExpanded) {
+                window.location.hash = item.id;
                 setTimeout(() => item.scrollIntoView({ behavior: 'smooth', block: 'start' }), 400);
+            } else {
+                window.location.hash = item.closest('.category').id;
             }
         });
     });
@@ -51,15 +106,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const songDetails = song.querySelector('.song-details');
 
         songHeader.addEventListener('click', (e) => {
-            e.stopPropagation(); // Don't trigger artist collapse
+            e.stopPropagation();
             const isExpanded = songDetails.classList.contains('expanded');
             
-            // Close other songs for this artist
             song.closest('.release-list').querySelectorAll('.song-details').forEach(details => {
                 if (details !== songDetails) details.classList.remove('expanded');
             });
 
             songDetails.classList.toggle('expanded');
+            
+            if (!isExpanded && songHeader.id) {
+                window.location.hash = songHeader.id;
+            }
         });
     });
 });
