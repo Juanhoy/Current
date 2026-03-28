@@ -13,6 +13,9 @@
     <!-- Version 2.1 - Local Audio Player -->
 </head>
 <body>
+    <video autoplay loop muted playsinline id="bg-video">
+        <source src="vid/Animated_Cloud_Loop_Static_Moon.mp4" type="video/mp4">
+    </video>
     <div id="app">
         <header class="site-header">
             <h1 class="logo">current</h1>
@@ -23,6 +26,7 @@
                 <a href="#musicians" class="nav-link">Musicians</a>
                 <a href="#djs" class="nav-link">DJs</a>
                 <a href="#photographers" class="nav-link">Photographers</a>
+                <a href="#film" class="nav-link">Film</a>
             </nav>
         </section>
 
@@ -173,8 +177,8 @@
                 <section class="category" id="djs">
                     <h2 class="category-title">DJs</h2>
                     <ul class="artist-list">
-                        <li class="artist-item" id="seanse" data-artist="seanse">
-                            <span class="artist-name">Seanse</span>
+                        <li class="artist-item" id="goodbye-johnny" data-artist="goodbye-johnny">
+                            <span class="artist-name">Goodbye Johnny</span>
                             <div class="artist-details">
                                 <ul class="release-list">
                                     <li class="song-item">
@@ -204,8 +208,8 @@
                                 </ul>
                             </div>
                         </li>
-                        <li class="artist-item" data-artist="chill-bill">
-                            <span class="artist-name">Chill Bill</span>
+                        <li class="artist-item" id="tiago" data-artist="tiago">
+                            <span class="artist-name">Tiago</span>
                             <div class="artist-details">
                                 <ul class="release-list">
                                     <li class="song-item">
@@ -256,6 +260,24 @@
                                     </div>
                                     <span class="instagram-tag">Follow Juan H</span>
                                 </a>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="category" id="film">
+                    <h2 class="category-title">Film Makers</h2>
+                    <ul class="artist-list">
+                        <li class="artist-item" id="film-jahco" data-artist="film-jahco">
+                            <span class="artist-name">Jahco</span>
+                            <div class="artist-details">
+                                <span class="set-info">Film portfolio material coming soon.</span>
+                            </div>
+                        </li>
+                        <li class="artist-item" id="film-juan-h" data-artist="film-juan-h">
+                            <span class="artist-name">Juan H</span>
+                            <div class="artist-details">
+                                <span class="set-info">Film portfolio material coming soon.</span>
                             </div>
                         </li>
                     </ul>
