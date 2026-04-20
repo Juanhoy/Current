@@ -204,7 +204,7 @@ body {
     gap: 0.75rem;
     margin-top: 0;
     margin-left: 0;
-    padding-left: 0; /* Removed indent to save space */
+    padding-left: 3.5rem; /* Align with title on desktop */
 }
 
 .song-details.expanded {
@@ -331,12 +331,20 @@ body {
     }
 
     .song-header {
-        font-size: 1rem;
+        font-size: 1.1rem;
+        flex-direction: column; /* Stack year and title to save space */
+        gap: 0.25rem;
     }
 
     .song-details {
         margin-left: 0;
-        padding-left: 0; /* No indent on mobile to maximize card width */
+        padding-left: 0;
+        margin-top: 1rem;
+    }
+
+    .year {
+        font-size: 0.8rem;
+        opacity: 0.5;
     }
 
     .song-details iframe {
