@@ -98,18 +98,141 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('hashchange', handleHash);
     handleHash(); // Run on load
 
-    // Handle Auto-Pause: Only one audio at a time
-    const allAudio = document.querySelectorAll('audio');
+    // --- Music Player Bar Logic ---
+    const playerBar = document.getElementById('player-bar');
+    const playPauseBtn = document.getElementById('player-play-pause');
+    const playIcon = document.getElementById('play-icon');
+    const pauseIcon = document.getElementById('pause-icon');
+    const trackTitleDisplay = document.getElementById('player-track-title');
+    const trackArtistDisplay = document.getElementById('player-track-artist');
+    const currentTimeDisplay = document.getElementById('player-current-time');
+    const durationDisplay = document.getElementById('player-duration');
+    const seekerContainer = document.getElementById('player-seeker-container');
+    const seekerProgress = document.getElementById('player-seeker-progress');
+    const volumeContainer = document.getElementById('player-volume-container');
+    const volumeProgress = document.getElementById('player-volume-progress');
+    const nextBtn = playerBar.querySelector('.control-btn.next');
+    const prevBtn = playerBar.querySelector('.control-btn.prev');
+
+    let activeAudio = null;
+    const allAudio = Array.from(document.querySelectorAll('audio'));
+
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    const updatePlayerUI = (audio) => {
+        if (!audio) return;
+        
+        // Find metadata from DOM
+        const songItem = audio.closest('.song-item');
+        const artistItem = audio.closest('.artist-item');
+        
+        const title = songItem ? songItem.querySelector('.song-title').textContent : 'Unknown Track';
+        const artist = artistItem ? artistItem.querySelector('.artist-name').textContent : 'Unknown Artist';
+        
+        trackTitleDisplay.textContent = title;
+        trackArtistDisplay.textContent = artist;
+        
+        // Show bar
+        playerBar.classList.add('visible');
+        
+        // Update Icons
+        if (audio.paused) {
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+        } else {
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'block';
+        }
+    };
+
     allAudio.forEach(audio => {
         audio.addEventListener('play', () => {
-            allAudio.forEach(other => {
-                if (other !== audio) {
-                    other.pause();
-                    other.currentTime = 0; // Optional: Reset or just pause
-                }
-            });
+            if (activeAudio && activeAudio !== audio) {
+                activeAudio.pause();
+                activeAudio.currentTime = 0;
+            }
+            activeAudio = audio;
+            updatePlayerUI(audio);
+        });
+
+        audio.addEventListener('pause', () => {
+            if (activeAudio === audio) updatePlayerUI(audio);
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            if (activeAudio === audio) {
+                const percent = (audio.currentTime / audio.duration) * 100;
+                seekerProgress.style.width = `${percent}%`;
+                currentTimeDisplay.textContent = formatTime(audio.currentTime);
+            }
+        });
+
+        audio.addEventListener('loadedmetadata', () => {
+            if (activeAudio === audio) {
+                durationDisplay.textContent = formatTime(audio.duration);
+            }
         });
     });
+
+    playPauseBtn.addEventListener('click', () => {
+        if (!activeAudio) return;
+        if (activeAudio.paused) {
+            activeAudio.play();
+        } else {
+            activeAudio.pause();
+        }
+    });
+
+    seekerContainer.addEventListener('click', (e) => {
+        if (!activeAudio || !activeAudio.duration) return;
+        const rect = seekerContainer.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const width = rect.width;
+        const percent = x / width;
+        activeAudio.currentTime = percent * activeAudio.duration;
+    });
+
+    volumeContainer.addEventListener('click', (e) => {
+        const rect = volumeContainer.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const percent = Math.max(0, Math.min(1, x / rect.width));
+        volumeProgress.style.width = `${percent * 100}%`;
+        allAudio.forEach(a => a.volume = percent);
+    });
+
+    const skipTrack = (direction) => {
+        if (!activeAudio) return;
+        const currentIndex = allAudio.indexOf(activeAudio);
+        let nextIndex = currentIndex + direction;
+        
+        if (nextIndex >= allAudio.length) nextIndex = 0;
+        if (nextIndex < 0) nextIndex = allAudio.length - 1;
+        
+        const nextAudio = allAudio[nextIndex];
+        
+        // Find the expansion parent and expand it if needed
+        const nextArtistItem = nextAudio.closest('.artist-item');
+        const nextDetails = nextArtistItem.querySelector('.artist-details');
+        const nextSongDetails = nextAudio.closest('.song-details');
+
+        // Close others
+        document.querySelectorAll('.artist-details').forEach(d => {
+            if (d !== nextDetails) d.classList.remove('expanded');
+        });
+        
+        nextDetails.classList.add('expanded');
+        nextSongDetails.classList.add('expanded');
+        
+        nextAudio.play();
+        nextAudio.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    };
+
+    nextBtn.addEventListener('click', () => skipTrack(1));
+    prevBtn.addEventListener('click', () => skipTrack(-1));
 
     // Reset to home when clicking logo
     logo.addEventListener('click', () => {
