@@ -335,14 +335,6 @@ body {
 
     .song-details {
         margin-left: 0.5rem;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .full-song-link {
-        order: -1;
-        margin-bottom: 0.75rem;
-        opacity: 0.8;
     }
 
     .song-details iframe {
@@ -374,23 +366,23 @@ body {
     }
 }
 
-/* Audio Controller Bar */
+/* Audio Controller Bar - Spotify Redesign */
 #audio-controller {
     position: fixed;
     bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
-    max-width: 600px;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
+    max-width: 750px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 100px;
-    padding: 0.75rem 1.5rem;
+    border-radius: 12px; /* Slightly more boxy/premium like latest spotify or stay rounded? Reference image is rounded pill but maybe slightly flatter */
+    padding: 1rem 1.5rem;
     z-index: 2000;
     transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.3s ease;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    box-shadow: 0 10px 50px rgba(0,0,0,0.6);
 }
 
 #audio-controller.hidden {
@@ -402,14 +394,17 @@ body {
 .controller-content {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    justify-content: space-between;
+    gap: 1rem;
     position: relative;
 }
 
+/* Left: Track Info */
 .track-info {
     display: flex;
     flex-direction: column;
-    min-width: 120px;
+    width: 25%;
+    min-width: 150px;
 }
 
 .controller-title {
@@ -418,28 +413,30 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-bottom: 2px;
+    color: #fff;
 }
 
 .controller-artist {
     font-size: 0.75rem;
-    opacity: 0.6;
+    opacity: 0.7;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.controller-main {
+/* Center: Playback Controls & Bar */
+.controller-center {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 450px;
 }
 
-.controller-controls {
+.main-controls {
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 1.5rem;
 }
 
@@ -451,62 +448,88 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4px;
-    transition: transform 0.2s ease, opacity 0.2s ease, color 0.2s ease;
-    opacity: 0.8;
+    opacity: 0.7;
+    transition: all 0.2s ease;
 }
 
 .ctrl-icon:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+.ctrl-icon.secondary {
+    opacity: 0.4;
+}
+
+.ctrl-icon.secondary:hover {
+    opacity: 0.8;
+}
+
+.ctrl-icon.secondary.shuffle {
+     color: #1DB954; /* Spotify green */
+     opacity: 0.8;
+}
+
+.play-main {
     transform: scale(1.1);
     opacity: 1;
-    color: #fff;
 }
 
-.ctrl-icon.play {
+.play-main:hover {
     transform: scale(1.2);
-    opacity: 1;
 }
 
-.ctrl-icon.play:hover {
-    transform: scale(1.3);
+/* Playback Bar Layout */
+.playback-bar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.time-stamp {
+    font-size: 0.7rem;
+    opacity: 0.6;
+    min-width: 30px;
+    font-family: monospace;
+}
+
+#current-time {
+    text-align: right;
 }
 
 .progress-wrap {
-    width: 100%;
+    flex: 1;
     height: 4px;
     background: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-    position: relative;
+    border-radius: 2px;
     cursor: pointer;
-    overflow: hidden;
+    position: relative;
 }
 
-.progress-bar {
-    width: 100%;
-    height: 100%;
-    position: relative;
+.progress-wrap:hover .progress-bar {
+    background: #1DB954;
 }
 
 #progress-fill {
-    position: absolute;
-    top: 0;
-    left: 0;
     height: 100%;
     background: #fff;
-    border-radius: 4px;
     width: 0%;
+    border-radius: 2px;
     transition: width 0.1s linear;
 }
 
+/* Right: Close Button */
 .close-btn {
     background: none;
     border: none;
     color: white;
     font-size: 1.25rem;
     cursor: pointer;
-    opacity: 0.4;
+    opacity: 0.5;
     transition: opacity 0.2s ease;
-    padding: 10px;
+    width: 25px;
+    text-align: right;
 }
 
 .close-btn:hover {
@@ -515,29 +538,27 @@ body {
 
 @media (max-width: 768px) {
     #audio-controller {
-        bottom: 1.5rem;
-        width: 92%;
-        padding: 0.6rem 1rem;
-    }
-    
-    .controller-content {
-        gap: 0.75rem;
+        bottom: 1rem;
+        width: 95%;
+        padding: 0.75rem;
+        border-radius: 8px;
     }
     
     .track-info {
-        min-width: 70px;
-        max-width: 90px;
-    }
-    
-    .controller-controls {
-        gap: 0.75rem;
+        display: none; /* Hide track info on mobile to save space for controls like original spotify mobile */
     }
 
-    .controller-title {
-        font-size: 0.8rem;
+    .controller-center {
+        width: 100%;
     }
 
-    .controller-artist {
-        font-size: 0.7rem;
+    .main-controls {
+        gap: 1.25rem;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: -10px;
+        right: 0;
     }
 }
