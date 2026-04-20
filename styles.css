@@ -159,7 +159,8 @@ body {
     font-size: 0.95rem;
     margin-bottom: 0.5rem;
     display: flex;
-    gap: 1.5rem;
+    flex-direction: column; /* Stack header and details vertically */
+    gap: 0.5rem;
 }
 
 .year {
@@ -204,7 +205,7 @@ body {
     gap: 0.75rem;
     margin-top: 0;
     margin-left: 0;
-    padding-left: 3.5rem; /* Align with title on desktop */
+    padding-left: 0; /* Align perfectly with the title above */
 }
 
 .song-details.expanded {
@@ -332,14 +333,14 @@ body {
 
     .song-header {
         font-size: 1.1rem;
-        flex-direction: column; /* Stack year and title to save space */
+        flex-direction: column; 
         gap: 0.25rem;
     }
 
     .song-details {
         margin-left: 0;
         padding-left: 0;
-        margin-top: 1rem;
+        margin-top: 0.5rem;
     }
 
     .year {
