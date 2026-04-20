@@ -16,8 +16,9 @@ body {
     color: var(--text-color);
     font-family: var(--font-serif);
     line-height: 1.5;
-    overflow-x: hidden;
-    min-height: 100vh;
+    overflow: hidden; /* Scroll handled by #app */
+    height: 100vh;
+    width: 100vw;
 }
 
 #bg-video {
@@ -33,9 +34,17 @@ body {
 
 #app {
     padding: 2rem;
-    min-height: 100vh;
+    height: 100vh;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
+    /* Top Fade Mask */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0px, black 200px);
+    mask-image: linear-gradient(to bottom, transparent 0px, black 200px);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
 }
 
 .site-header {
@@ -91,7 +100,7 @@ body {
 }
 
 .view-content {
-    padding-top: 8rem;
+    padding-top: 12.5rem; /* ~200px */
     transition: opacity 0.5s ease;
 }
 
@@ -313,7 +322,7 @@ body {
     }
 
     .view-content {
-        padding-top: 6rem;
+        padding-top: 8rem; /* Adjusted for mobile mask */
     }
 
     .release-list, .event-list {
@@ -325,7 +334,12 @@ body {
     }
 
     .song-details {
-        margin-left: 1rem;
+        margin-left: 0.5rem;
+    }
+
+    .song-details iframe {
+        width: 100% !important;
+        max-width: 300px;
     }
 
     .custom-player {
