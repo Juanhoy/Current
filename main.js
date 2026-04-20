@@ -277,6 +277,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
             songDetails.classList.toggle('expanded');
             
+            // Trigger Player Bar even for Spotify tracks
+            if (!isExpanded) {
+                const title = songHeader.querySelector('.song-title').textContent;
+                const artist = song.closest('.artist-item').querySelector('.artist-name').textContent;
+                
+                trackTitleDisplay.textContent = title;
+                trackArtistDisplay.textContent = artist;
+                playerBar.classList.add('visible');
+
+                // If it's a Spotify track, update button state
+                if (!songDetails.querySelector('audio')) {
+                    playIcon.style.display = 'block';
+                    pauseIcon.style.display = 'none';
+                    trackArtistDisplay.textContent = artist + " (via Spotify)";
+                }
+            }
+
             if (!isExpanded && songHeader.id) {
                 window.location.hash = songHeader.id;
             }
